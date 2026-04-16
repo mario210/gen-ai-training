@@ -53,7 +53,7 @@ def describe_image(image_path: str, prompt_text: str):
 
 
 if __name__ == "__main__":
-    image_file = "assets/istockphoto-683494078-1024x1024.jpg"
+    image_file = "../assets/istockphoto-683494078-1024x1024.jpg"
     question = "What is in this image?"
     try:
         describe_image(image_path=image_file, prompt_text=question)
