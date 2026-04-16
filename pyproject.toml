@@ -1,0 +1,13 @@
+[project]
+name = "gen-ai-training"
+version = "0.1.0"
+description = "GEN AI training with Python"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "dotenv>=0.9.9",
+    "langchain>=1.2.15",
+    "langchain-ollama>=1.1.0",
+    "langchain-openai>=1.1.13",
+    "pydantic>=2.13.1",
+]
