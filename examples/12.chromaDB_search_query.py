@@ -28,12 +28,16 @@ def chromaDB_search_query_example():
 
     # version 1 : search by similarity
     results = vector_store.similarity_search(query)
-    print(f"[similarity] Search results ({len(results)}): {results}")
+    print(f"\n[similarity] Search results ({len(results)}):")
+    for i, doc in enumerate(results):
+        print(f"\n--- Result {i+1} ---\n{doc.page_content[:250]}...\n")
 
     # version 2 : search by relevance
     retriever = vector_store.as_retriever(search_type="mmr", search_kwargs={"k": 5})
     results_retriever = retriever.invoke(query)
-    print(f"[retriever] Search results ({len(results_retriever)}): {results_retriever}")
+    print(f"\n[retriever] Search results ({len(results_retriever)}):")
+    for i, doc in enumerate(results_retriever):
+        print(f"\n--- Result {i+1} ---\n{doc.page_content[:250]}...\n")
 
 
 if __name__ == "__main__":

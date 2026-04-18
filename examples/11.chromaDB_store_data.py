@@ -16,6 +16,16 @@ def chromaDB_store_data_example():
     docs = utils.load_langchain_docs_from_json("../assets/howto_logging.json")
     print(f"Number of documents loaded: {len(docs)}")
 
+    # Context Enrichment: Inject metadata directly into the page_content.
+    # This ensures both the embedding model and the LLM have explicit knowledge 
+    # of where this chunk of text came from.
+    for doc in docs:
+        title = doc.metadata.get("title", "Unknown Title")
+        author = doc.metadata.get("author", "Unknown Author")
+        page = doc.metadata.get("page", "Unknown Page")
+        
+        doc.page_content = f"Document Title: {title}\nAuthor: {author}\nPage Number: {page}\n\nContent:\n{doc.page_content}"
+
     embedding_model = OpenAIEmbeddings(
         model=EMBEDDED_LLM_MODEL_NAME,
         base_url="https://openrouter.ai/api/v1",
