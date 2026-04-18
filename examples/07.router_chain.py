@@ -12,7 +12,6 @@ from langchain_core.runnables import (
     RunnableParallel,
 )
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
-from langchain_core.embeddings import Embeddings
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_community.utils.math import cosine_similarity
 from dotenv import load_dotenv, find_dotenv
