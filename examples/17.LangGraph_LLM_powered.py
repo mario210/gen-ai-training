@@ -13,6 +13,8 @@ How it works:
 """
 
 import utils
+import json
+import traceback
 from dotenv import load_dotenv, find_dotenv
 from typing import TypedDict, List, Optional, Dict, Any
 from langgraph.graph import StateGraph, END
@@ -66,14 +68,21 @@ Return ONLY valid JSON like:
 }}
 """)
 
-    chain = prompt | llm
-    response = chain.invoke({"request": state["request"]})
-
     try:
-        import json
-
-        state["raw_data"] = json.loads(response.content)
+        chain = prompt | llm
+        response = chain.invoke({"request": state["request"]})
+        
+        # Strip Markdown backticks from the LLM output before parsing
+        content = response.content.strip()
+        if content.startswith("```"):
+            content = content.strip("` \n")
+            if content.lower().startswith("json"):
+                content = content[4:].strip()
+                
+        state["raw_data"] = json.loads(content)
     except Exception as e:
+        print("\n[ERROR in data_collector_agent]")
+        traceback.print_exc()
         state["errors"].append(str(e))
 
     return state
@@ -99,6 +108,8 @@ Return structured analysis in JSON.
         response = chain.invoke({"raw_data": state["raw_data"]})
         state["processed_data"] = response.content
     except Exception as e:
+        print("\n[ERROR in data_processor_agent]")
+        traceback.print_exc()
         state["errors"].append(str(e))
     return state
 
@@ -122,6 +133,8 @@ Generate a chart configuration in JSON:
         response = chain.invoke({"processed_data": state["processed_data"]})
         state["chart_config"] = response.content
     except Exception as e:
+        print("\n[ERROR in chart_generator_agent]")
+        traceback.print_exc()
         state["errors"].append(str(e))
     return state
 
@@ -152,6 +165,8 @@ Write a professional executive sales report with:
         )
         state["report"] = response.content
     except Exception as e:
+        print("\n[ERROR in report_generator_agent]")
+        traceback.print_exc()
         state["errors"].append(str(e))
     return state
 
