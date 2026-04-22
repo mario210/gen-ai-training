@@ -29,10 +29,12 @@ def invoke_and_check_cache(chain, input_data: dict) -> str:
     start_time = time.time()
     response = chain.invoke(input_data)
     elapsed_time = time.time() - start_time
-    
+
     # API calls typically take >0.5s. In-memory cache hits are near instantaneous (<0.1s).
     is_cached = elapsed_time < 0.1
-    print(f"\n[Info] LLM Generation took {elapsed_time:.4f} seconds (Cache Hit: {is_cached})")
+    print(
+        f"\n[Info] LLM Generation took {elapsed_time:.4f} seconds (Cache Hit: {is_cached})"
+    )
     return response
 
 
@@ -81,10 +83,9 @@ def rag_example(query: str):
 
     # Build and invoke the LangChain Expression Language (LCEL) chain
     chain = prompt_template | model | StrOutputParser()
-    
+
     llm_response = invoke_and_check_cache(
-        chain,
-        {"usr_query": query, "rag_context_info": prompt_context_info}
+        chain, {"usr_query": query, "rag_context_info": prompt_context_info}
     )
 
     print("Response:\n" + llm_response)
