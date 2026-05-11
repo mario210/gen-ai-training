@@ -54,36 +54,14 @@ def recommend_clothing(weather: str) -> str:
         return "A light jacket or casual outfit should be fine."
 
 
-tools = [search_tool, recommend_clothing]
-
-prompt = ChatPromptTemplate.from_messages(
-    [
-        (
-            "system",
-            """
-You are a helpful AI assistant.
-
-Your job:
-1. Check current weather using search_tool
-2. Extract useful weather info
-3. Call recommend_clothing
-4. Return final recommendation
-
-Always use tools when needed. Do not guess weather.
-""",
-        ),
-        ("human", "{input}"),
-        ("placeholder", "{agent_scratchpad}"),
-    ]
-)
-
-
 llm = ChatOpenAI(
     model=MODEL_NAME,
     temperature=0,
     base_url="https://openrouter.ai/api/v1",
     api_key=utils.get_api_key("OPENROUTER_API_KEY"),
 )
+
+tools = [search_tool, recommend_clothing]
 
 # ---- AGENT ----
 agent = create_agent(
